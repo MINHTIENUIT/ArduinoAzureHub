@@ -2,7 +2,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-static OneWire oneWire(ONE_WIRE_BUS);
+static OneWire oneWire(13);
 static DallasTemperature DS18B20(&oneWire);
 
 void sensor_init(){

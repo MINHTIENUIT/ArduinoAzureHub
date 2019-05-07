@@ -2,9 +2,10 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <Arduino.h>
 #include "iot_configs.h"
 #include "azure.h"
-
+#include "sensor.h"
 #include "AzureIoTHub.h"
 
 /*String containing Hostname, Device Id & Device Key in the format:             */
@@ -95,7 +96,7 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT IoTHubMessage(IOTHUB_MESSAGE_HANDLE mess
     else
     {
         /*buffer is not zero terminated*/
-        char* temp = malloc(size + 1);
+        char* temp = (char*)malloc(size + 1);
         if (temp == NULL)
         {
             printf("failed to malloc\r\n");
@@ -127,16 +128,17 @@ void set_data_device(ContosoAnemometer **myWeather){
 
     (*myWeather)->DeviceId = "myFirstDevice";                        
     (*myWeather)->Temperature = minTemperature + (rand() % 10);    
+    (*myWeather)->Temperature = getTemperature();    
     (*myWeather)->Humidity = minHumidity + (rand() % 20);
 }
 
 void azure_http_run(void)
 {
-    if (platform_init() != 0)
-    {
-        printf("Failed to initialize the platform.\r\n");
-    }
-    else
+//    if (platform_init() != 0)
+//    {
+//        printf("Failed to initialize the platform.\r\n");
+//    }
+//    else
     {
         if (serializer_init(NULL) != SERIALIZER_OK)
         {
@@ -236,7 +238,7 @@ void azure_http_run(void)
             }
             serializer_deinit();
         }
-        platform_deinit();
+//        platform_deinit();
     }
     
 }
@@ -245,4 +247,5 @@ void azure_http_run(void)
 void azure_run(void)
 {
     azure_http_run();
+    delay(5000);
 }
